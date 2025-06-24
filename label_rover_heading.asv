@@ -44,7 +44,7 @@ for i = 1:size(rover_stack_left,1)
         end_time = rover_stack_left.End(i);
         [~, end_idx] = min(abs(post_align_struct.l_gait.DateTime - end_time));
         post_align_struct.l_gait.Gait(start_idx:end_idx) = 1;
-        post_align_struct.l_gait.Heading(start_idx:end_idx) = rover_stack_left.Heading(i);
+        post_align_struct.l_gait.Heading(start_idx:end_idx) = rover_stack_;
     end
     update = [num2str(100*i/size(rover_stack_left,1)) '% done with left'];
     disp(update)
@@ -59,7 +59,6 @@ for i = 1:size(rover_stack_right,1)
         end_time = rover_stack_right.End(i);
         [~, end_idx] = min(abs(post_align_struct.r_gait.DateTime - end_time));
         post_align_struct.r_gait.Gait(start_idx:end_idx) = 1;
-        post_align_struct.r_gait.Heading(start_idx:end_idx) = rover_stack_right.Heading(i);
     end
     update = [num2str(100*i/size(rover_stack_right,1)) '% done with right'];
     disp(update)

@@ -59,7 +59,9 @@ for i = 1:size(test.l_gait_periods,1)
     x = test.l_gait_periods.NewTime_start(i);
     y = min(test.l_rover.LinearAccelX);
     height = max(test.l_rover.LinearAccelX) - min(test.l_rover.LinearAccelX);
+
     width = test.l_gait_periods.NewTime_end(i)-test.l_gait_periods.NewTime_start(i);
+    height = max(abs(test.l_rover.LinearAccelX));
     if test.l_gait_periods.Gait(i) == 1
         rectangle('Position',[x,y,width,height],'FaceColor',[0, 1, 0, 0.1],'EdgeColor','none');
     elseif test.l_gait_periods.Gait(i) == 0

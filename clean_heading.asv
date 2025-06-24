@@ -1,0 +1,62 @@
+function output_struct = clean_heading(labeled_struct, zero_interv, smooth_interv)
+
+heading = labeled_struct.l_gait.Heading;
+is_zero = heading == 0;
+diffs = diff([0; is_zero; 0]);
+run_starts = find(diffs == 1);
+run_ends = find(diffs == -1) - 1;
+
+for i = 1:length(run_starts)
+    run_length = run_ends(i) - run_starts(i) + 1;
+    if run_length <= zero_interv;
+        heading(run_starts(i):run_ends(i)) = NaN;
+    end
+end
+
+heading_interp = heading;
+x = 1:length(heading);
+known_idx = ~isnan(heading);
+nan_idx = isnan(heading);
+heading_interp(nan_idx) = interp1(x(known_idx), heading(known_idx), x(nan_idx), 'linear');
+
+coeff_smooth = ones(1, smooth_interv)/smooth_interv;
+heading_smooth = filter(coeff_smooth,1,heading_interp);
+delay = 1000*(length(coeff_smooth)-1)/2;
+
+figure();
+ax(1) = subplot(411);
+plot(labeled_struct.l_rover.NewTime, labeled_struct.l_rover.LinearAccelX,'Color','black');
+xlabel('Time (ms)')
+ylabel('Acceleration (a.u.)')
+title('Original Left Rover Acceleration Signal')
+ax(2) = subplot(412);
+plot(labeled_struct.l_gait.NewTime,labeled_struct.l_gait.Heading,Color='black');
+hold on
+scatter(labeled_struct.l_gait.NewTime,labeled_struct.l_gait.Heading,'filled','ColorVariable','red');
+xlabel('Time (ms)')
+ylabel('Heading (°)')
+title('Left Rover Heading Signal')
+ax(3) = subplot(413);
+plot(labeled_struct.l_gait.NewTime,heading,Color='black');
+hold on
+scatter(labeled_struct.l_gait.NewTime,heading,'filled','ColorVariable','red');
+xlabel('Time (ms)')
+ylabel('Heading (°)')
+title(sprintf('Left Rover Heading Signal with Zero Runs <%.1fs Removed', zero_interv/1000))
+linkaxes(ax, 'x')
+ax(3) = subplot(414);
+plot(labeled_struct.l_gait.NewTime,heading_interp,Color='black');
+hold on
+plot(labeled_struct.l_gait.NewTime - delay/smooth_interv,heading_smooth,Color='blue');
+ylabel('Heading (°)')
+xlabel('Time (ms)')
+title(sprintf('Left Rover Heading Signal with Interpolation and %.2fs Smoothing', smooth_interv/1000))
+linkaxes(ax, 'x')
+xlim([0 inf]);
+
+output_struct = labeled_struct;
+output_struct.l_gait.Heading_Clean = 
+
+
+end
+
