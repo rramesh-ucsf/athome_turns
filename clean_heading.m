@@ -1,5 +1,28 @@
 function output_struct = clean_heading(labeled_struct, zero_interv, smooth_interv)
 
+%CLEAN_HEADING detects potential turns using Rover heading signal. 
+%
+%   output_struct = CLEAN_HEADING(labeled_struct, zero_interv, smooth_interv)
+%
+%   Inputs:
+%       labeled_struct - Struct containing Rover data 
+%       zero_inter = Runs of missing data longer than this interval (in ms)
+%       will be removed (i.e. runs of missing data shorter than this
+%       interval will be assumed to be true missing data rather than a
+%       period where the subject was at rest)
+%       smooth_interv = Interpolated heading signal will be smoothed using
+%       moving average over this interval (in ms) 
+%
+%   Output:
+%       output_struct = Struct containing cleaned Rover heading signal
+%
+%   This function cleans the Rover heading signal by interpolating periods
+%   of missing data and smoothing using moving average. 
+%
+%   Example:
+%       output_struct = CLEAN_HEADING(labeled_struct, 2500, 1000)
+%
+
 heading = labeled_struct.l_gait.Heading;
 is_zero = heading == 0;
 diffs = diff([0; is_zero; 0]);

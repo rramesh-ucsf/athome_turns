@@ -29,7 +29,7 @@ linkaxes(ax, 'x')
 
 %% Clean the heading signal and visualize the results 
 
-zero_interv = 2500; % Continuous strings of zeros greater than this many ms will be removed and interpolated
+zero_interv = 2500; % Continuous strings of zeros (no heading info available) greater than this many ms will be removed and interpolated
 smooth_interv = 1000; % Heading signal will be smoothed using moving average over this many ms 
 
 cleaned_struct = clean_heading(labeled_struct, zero_interv, smooth_interv);
